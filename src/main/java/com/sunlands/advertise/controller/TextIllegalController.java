@@ -2,6 +2,7 @@ package com.sunlands.advertise.controller;
 
 import com.sunlands.advertise.core.ADResponse;
 import com.sunlands.advertise.dto.CommonWordResult;
+import com.sunlands.advertise.dto.DetectResult;
 import com.sunlands.advertise.dto.IllegalTextInfo;
 import com.sunlands.advertise.dto.SimilarTextResult;
 import com.sunlands.advertise.service.TextIllegalService;
@@ -89,6 +90,36 @@ public class TextIllegalController {
         response.setData(similarTextResultList);
         return response;
     }
+
+    @RequestMapping("/getDetectResult")
+    public ADResponse getDetectResult() {
+        ADResponse response = new ADResponse();
+        List<DetectResult> results = new ArrayList<>();
+        DetectResult result = new DetectResult();
+        result.setTargetText("3小时");
+        result.setResultType("违规");
+        result.setAverageScore(1.0D);
+        result.setCharCommonScore(1.0D);
+        result.setCharCommonSimiBaseText("备战自考 3小时 学会中国近现代史");
+        result.setCharCommonSimiCommonText("3小时");
+        result.setWordCommonScore(1.0D);
+        result.setWordCommonSimiBaseText("备战自考 3小时 学会中国近现代史");
+        result.setWordCommonSimiCommonText("3小时");
+        result.setSubCommonScore(1.0D);
+        result.setSubCommonSimiBaseText("备战自考 3小时 学会中国近现代史");
+        result.setSubCommonSimiCommonText("3小时");
+        result.setHashCommonScore(1.0D);
+        result.setHashCommonSimiBaseText("备战自考 3小时 学会中国近现代史");
+        result.setHashCommonSimiCommonText("");
+        result.setRealResult("");
+        results.add(result);
+        response.setCode(0);
+        response.setMessage("");
+        response.setData(results);
+        return response;
+    }
+
+
 
 
 }

@@ -19,8 +19,8 @@ public class BlackWordController {
     @Autowired
     MasterDao masterDao;
 
-    @RequestMapping("/generateTextHashCode")
-    public ADResponse generateTextHashCode() {
+    @RequestMapping("/listBlackWord")
+    public ADResponse listBlackWord() {
         ADResponse response = new ADResponse();
         List<BlackWordSuggestWords> list = masterDao.listBlackWord();
         response.setCode(0);
