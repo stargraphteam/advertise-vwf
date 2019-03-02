@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link rel="stylesheet" href="layui/css/layui.css" media="all">
+		<!--<link id="layuicss-laydate" rel="stylesheet" href="https://res.layui.com/layui/dist/css/modules/laydate/default/laydate.css?v=5.0.9" media="all">-->
+		<!--<link id="layuicss-layer" rel="stylesheet" href="https://res.layui.com/layui/dist/css/modules/layer/default/layer.css?v=3.1.1" media="all">-->
+		<title>广告违规词检测</title>
+	</head>
+
+	<body>
+		<div class="layui-container">
+			<div class="layui-row">
+				<div class="layui-col-xs6 layui-col-md12">
+					<div class="layui-tab-item layui-show">
+						<div class="layui-upload-drag" id="uploadDemo">
+							<i class="layui-icon"></i>
+							<p>点击上传，或将文件拖拽到此处</p>
+						</div><input class="layui-upload-file" type="file" accept="undefined" name="file">
+					</div>
+				</div>
+				<div class="layui-col-xs6 layui-col-md12">
+					<table class="layui-hide" id="demo" lay-filter="test"></table>
+					<script type="text/html" id="barDemo">
+						<a class="layui-btn layui-btn-xs" lay-event="positive">正样本</a>
+						<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="nagative">负样本</a>
+					</script>
+					<div class="layui-tab-item">
+						<div id="pageDemo"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script type="text/javascript" src="layui/layui.js"></script>
+		<script type="text/javascript">
+			layui.use(['laydate', 'laypage', 'layer', 'table', 'carousel', 'upload', 'element', 'slider'], function() {
+				var laydate = layui.laydate //日期
+					,
+					laypage = layui.laypage //分页
+					,
+					layer = layui.layer //弹层
+					,
+					table = layui.table //表格
+					,
+					carousel = layui.carousel //轮播
+					,
+					upload = layui.upload //上传
+					,
+					element = layui.element //元素操作
+					,
+					slider = layui.slider; //滑块
+
+				//上传
+				upload.render({
+					elem: '#uploadDemo',
+					url: './word/verify' //上传接口
+						,
+					done: function(res) {
+						console.log(res)
+					}
+				});
+
+				//监听Tab切换
+				element.on('tab(demo)', function(data) {
+					layer.tips('切换了 ' + data.index + '：' + this.innerHTML, this, {
+						tips: 1
+					});
+				});
+
+				//执行一个 table 实例
+				table.render({
+					elem: '#demo',
+					height: 420,
+					url: './word/verify' //数据接口
+						,
+					title: '违规词检测结果',
+					page: true //开启分页
+						,
+					toolbar: 'default' //开启工具栏，此处显示默认图标，可以自定义模板，详见文档
+						,
+					totalRow: false //开启合计行
+						,
+					cols: [
+						[ //表头
+							{
+								type: 'checkbox',
+								fixed: 'left'
+							}, {
+								field: 'id',
+								title: 'ID',
+								width: 80,
+								sort: true,
+								fixed: 'left',
+								totalRowText: '合计：'
+							}, {
+								field: 'text',
+								title: '检测词语（语句）',
+								width: 300
+							}, {
+                            field: 'hit',
+                            title: '违规词',
+                            width: 250,
+                            sort: true
+                        	},{
+								field: 'type',
+								title: '违规类型',
+								width: 150,
+								sort: true,
+								totalRow: true
+							}, {
+								field: 'score',
+								title: '评分',
+								width: 150,
+								sort: true
+							}, {
+								fixed: 'right',
+								width: 165,
+								align: 'center',
+								toolbar: '#barDemo'
+							}
+						]
+					]
+				});
+
+                //监听头工具栏事件
+                table.on('toolbar(test)', function(obj) {
+                    var checkStatus = table.checkStatus(obj.config.id),
+                        data = checkStatus.data; //获取选中的数据
+                    switch(obj.event) {
+                        case 'positive':
+                            layer.msg('加入正样本成功！');
+                            break;
+                        case 'nagative':
+                            layer.msg('加入负样本成功！');
+                            break;
+                            break;
+                    };
+                });
+
+				//分页
+				laypage.render({
+					elem: 'pageDemo' //分页容器的id
+						,
+					count: 100 //总页数
+						,
+					skin: '#1E9FFF' //自定义选中色值
+						//,skip: true //开启跳页
+						,
+					jump: function(obj, first) {
+						if(!first) {
+							layer.msg('第' + obj.curr + '页', {
+								offset: 'b'
+							});
+						}
+					}
+				});
+			});
+		</script>
+	</body>
+
+</html>
