@@ -1,5 +1,6 @@
 package com.sunlands.advertise.mapper;
 
+import com.sunlands.advertise.dto.BlackWordSuggestWords;
 import com.sunlands.advertise.dto.IllegalTextInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -31,4 +32,8 @@ public interface MasterDao {
 
     @Update({"update t_illegal_text set hash_code = #{hashCode} where text_id = #{textId}"})
     void updateTextHashCode(@Param("textId") Long textId, @Param("hashCode") String hashCode);
+
+    @Select({"select id as blackWordId, content as blackWord, remark as suggestWords" +
+            " from t_hm_black_word where remark is not null"})
+    List<BlackWordSuggestWords> listBlackWord();
 }
